@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register and Login</title>
+    <style>
+        .form-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <button id="showRegister">Register</button>
+    <button id="showLogin">Login</button>
+
+    <div id="registerForm" class="form-container">
+        <h2>Register</h2>
+        <input type="email" id="registerEmail" placeholder="Email ID"><br>
+        <input type="text" id="registerFirstName" placeholder="First Name"><br>
+        <input type="password" id="registerPassword" placeholder="Password"><br>
+        <input type="password" id="registerConfirmPassword" placeholder="Confirm Password"><br>
+        <button id="registerButton">Register</button>
+    </div>
+
+    <div id="loginForm" class="form-container">
+        <h2>Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email ID"><br>
+        <input type="password" id="loginPassword" placeholder="Password"><br>
+        <button id="loginButton">Login</button>
+    </div>
+
+    <script>
+        document.getElementById('showRegister').addEventListener('click', () => {
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
+        });
+
+        document.getElementById('showLogin').addEventListener('click', () => {
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+        });
+
+        document.getElementById('registerButton').addEventListener('click', async () => {
+            const emailID = document.getElementById('registerEmail').value;
+            const firstName = document.getElementById('registerFirstName').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+            const response = await fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ emailID, firstName, password, confirmPassword }),
+            });
+
+            const result = await response.text();
+            alert(result);
+        });
+
+        document.getElementById('loginButton').addEventListener('click', async () => {
+            const emailID = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ emailID, password }),
+            });
+
+            const result = await response.text();
+            if (result === 'Logged in successfully') {
+                window.location.href = 'https://paymentlogs.doctor9.com/payment';
+            } else {
+                alert(result);
+            }
+        });
+    </script>
+</body>
+</html>
